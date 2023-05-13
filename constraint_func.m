@@ -32,7 +32,7 @@ function [c, ceq] = constraint_func(x)
         end
         j = j+1;
     end
-    c = [c; abs(tar_lon-lons(end))-ang_tol; abs(tar_lat-lats(end))-ang_tol; abs(2-alts(end))-2];
+        ceq = [ceq; abs(tar_lon-lons(end)); abs(tar_lat-lats(end)); abs(2-alts(end))];
 %     c = [c; abs(2-alts(end))-2];
 
 end
