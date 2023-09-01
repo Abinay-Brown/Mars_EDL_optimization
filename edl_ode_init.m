@@ -1,4 +1,4 @@
-function x_dot = edl_ode(x, u)
+function x_dot = edl_ode(t, x)
     
     % state vector x = [lon, lat, alt, vel, fpa, azi]
     phi = x(1);     % Longitude (rad)
@@ -9,7 +9,7 @@ function x_dot = edl_ode(x, u)
     psi = x(6);     % Heading Angle (rad)
 
     % Control Input
-    sig = x(7);        % Bank Angle (rad)
+    sig = 0;        % Bank Angle (rad)
     
     % Mars Contants
     Rm = 3376.2 * 1000; %  Mars Radius (m)
@@ -30,11 +30,14 @@ function x_dot = edl_ode(x, u)
     D = (1/2)*rho*V*V*S*Cd;       % Drag Force  
     L = L_D*D;                    % Lift Force
     M = V / sqrt(1.294*188.92* 148.15); % Mach Number
+%     disp(M);
+%     Deploy Parachute at Mach 
 %     if M <= 1.5
 %         
 %         D = D + ((1/2)*rho*V*V*S_pc*Cd_pc);
 %         L = 0;
 %     end
+%     disp(S)
     r = Rm + h;
     g = mu/r^2;
     phi_dot = (V/r)*cos(y)*sin(psi)/cos(theta);

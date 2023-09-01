@@ -14,7 +14,7 @@ function [c, ceq] = constraint_func(x)
     c = [];
     ceq = [];
     bnk_lim = 0.0872665;
-    ang_tol = 0.0174533/4;
+    ang_tol = 0.0174533;
     tar_lat = 0.5894954268;
     tar_lon = -1.472993311;
     j = 1;
@@ -32,7 +32,7 @@ function [c, ceq] = constraint_func(x)
         end
         j = j+1;
     end
-        ceq = [ceq; abs(tar_lon-lons(end)); abs(tar_lat-lats(end)); abs(2-alts(end))];
-%     c = [c; abs(2-alts(end))-2];
+%     c = [c; abs(tar_lon-lons(end))-ang_tol; abs(tar_lat-lats(end))-ang_tol];
+    c = [c; abs(tar_alt-lats(end))-alt_tol];
 
 end

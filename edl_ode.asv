@@ -9,7 +9,7 @@ function x_dot = edl_ode(x, u)
     psi = x(6);     % Heading Angle (rad)
 
     % Control Input
-    sig = x(7);        % Bank Angle (rad)
+    sig = u;        % Bank Angle (rad)
     
     % Mars Contants
     Rm = 3376.2 * 1000; %  Mars Radius (m)
@@ -18,11 +18,11 @@ function x_dot = edl_ode(x, u)
     H = 11.1; % Mars scale height (km)
     
     % Reentry Vehicle Constants
-    m =800;        % Vehicle Mass (kg)
-    Cd = 1.7;      % Vehicle Drag Coefficient
+    m = 832;        % Vehicle Mass (kg)
+    Cd = 1.65;      % Vehicle Drag Coefficient
     Cd_pc = 1.1;    % Vehicle Drag Coefficient Parachute
-    L_D = 0.22;     % Vehicle L/D ratio
-    radius = 1.65; % Shell radius (m)
+    L_D = 0.24;     % Vehicle L/D ratio
+    radius = 1.325; % Shell radius (m)
     S = (pi*radius*radius); % Shell Area (m^2)
     S_pc = 107.2;           % Parachute Area (m^2)
         
@@ -30,27 +30,27 @@ function x_dot = edl_ode(x, u)
     D = (1/2)*rho*V*V*S*Cd;       % Drag Force  
     L = L_D*D;                    % Lift Force
     M = V / sqrt(1.294*188.92* 148.15); % Mach Number
-%     if M <= 1.5
-%         
-%         D = D + ((1/2)*rho*V*V*S_pc*Cd_pc);
-%         L = 0;
-%     end
+    
+    % Deploy Parachute at Mach 
+    if M <= 1.65
+        D = D + ((1/2)*rho*V*V*S_pc*Cd_pc);
+    end
+    
     r = Rm + h;
     g = mu/r^2;
-    phi_dot = (V/r)*cos(y)*sin(psi)/cos(theta);
-    theta_dot = (V/r)*cos(y)*cos(psi);
-    h_dot = V*sin(y);
+    
+    phi_dot = (v/r)*cos(y)*sin(psi)/cos(theta);
+    theta_dot = (v/r)*cos(y)*cos(psi);
+    h_dot = v*sin(y);
     V_dot = -(D/m)-(g*sin(y));
     y_dot = (L/m/V*cos(sig))+(cos(y)*((V/r)-(g/V)));
-    psi_dot = ((1/m/V/cos(y))*L*sin(sig))+((V/r/cos(theta))*cos(y)*sin(psi)*sin(theta));
+    psi_dot = (1/m/V/cos(y));
     
-    
-    x_dot(1) = phi_dot;
-    x_dot(2) = theta_dot;
-    x_dot(3) = h_dot;
-    x_dot(4) = V_dot;
-    x_dot(5) = y_dot;
-    x_dot(6) = psi_dot;
-    x_dot= x_dot';
-
+    state_dot(1) = h_dot;
+    state_dot(2) = phi_dot;
+    state_dot(3) = theta_dot;
+    state_dot(4) = v_dot;
+    state_dot(5) = gamma_dot;
+    state_dot(6) = psi_dot;
+    state_dot= state_dot';
 end
